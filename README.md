@@ -176,6 +176,8 @@ where last_updated > '@{if(empty(pipeline().parameters.backdate),
 - `backdate` has a value (for example `2025-09-22`): use that date instead
 - After a backdated run, MaxCDC and change_cdc set the watermark to the latest date again, so normal runs continue smoothly
 
+![Scenario 1 pipeline](Utilities/adv1.jpg)
+
 ### 🧪 The 3 scenarios I tested
 
 | Scenario | What happens |
@@ -288,6 +290,10 @@ ADF has no try/catch block. **On-failure paths are how error handling is done.**
 
 **System variables used:** `@pipeline().Pipeline` (pipeline name), `@pipeline().RunId` (unique run ID, used to find the failed run in Monitor). Others worth knowing: `DataFactory`, `TriggerName`, `TriggerType`, `TriggerTime`, `GroupId`.
 
+![Scenario 1 pipeline](Utilities/adv21.jpg)
+
+![Scenario 1 pipeline](Utilities/adv2.jpg)
+
 ### 🧪 How I tested the alert
 1. Break the child pipeline on purpose (for example a wrong table name)
 2. Run the parent with Debug or Trigger now
@@ -384,15 +390,7 @@ How it works: Copy calls `/pokemon` and gets page 1, reads `$.next` (the URL of 
 | Copy (REST source) | Moving large or paginated API data into storage | Supports pagination, headers, request interval |
 | Lookup (REST dataset) | Reading a small response as config | 5,000 rows / about 4 MB |
 
-### 🚧 Limitations and how to improve
-- **Silent data loss** if pagination is missing. Always compare the API `count` with the number of records written to the sink.
-- **Rate limiting:** use the *Request interval* setting, retries with delay, and expect HTTP 429 errors.
-- **Authentication:** PokeAPI is anonymous, but real APIs need Basic, Service Principal, Managed Identity or OAuth2. Keep secrets in **Key Vault**, never hard-coded.
-- **Incremental loads from APIs:** if the API supports a filter like `updated_since`, reuse the watermark idea from Project 1.
-- **Retry policy:** set retry count and interval on the Copy activity.
-- **Schema drift:** storing raw JSON first keeps the pipeline safe when the API changes.
-- **Private APIs** need a Self-hosted Integration Runtime. Public APIs use the default Azure IR.
-- **Use `MaxRequestNumber` while testing** so you do not pull thousands of pages while debugging.
+![Scenario 1 pipeline](Utilities/adv3.jpg)
 
 ---
 
@@ -463,6 +461,8 @@ Validation -> Get Metadata -> ForEach -> (after loop) Delete locations.csv
 | `p_container` | `source` | `sink` |
 | `p_folder` | `files` | `@item().name` |
 | `p_files` | `@item().name` | `@item().name` |
+
+![Scenario 1 pipeline](Utilities/adv4.jpg)
 
 ---
 
@@ -566,6 +566,10 @@ Get Metadata -> ForEach (childItems) -> ONE Copy Activity
 ```
 
   For a fully **metadata-driven** design, store the mappings in a config file or table and read them with a **Lookup** activity.
+
+![Scenario 1 pipeline](Utilities/adv5.jpg)
+
+![Scenario 1 pipeline](Utilities/adv51.jpg)
 
 ---
 
