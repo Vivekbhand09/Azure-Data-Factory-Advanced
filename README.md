@@ -294,7 +294,7 @@ ADF has no try/catch block. **On-failure paths are how error handling is done.**
 
 ![Scenario 1 pipeline](Utilities/adv2.jpg)
 
-![Scenario 1 pipeline](Utilities/adv22.jpg)
+![Scenario 1 pipeline](Utilities/adv22.png)
 
 ### 🧪 How I tested the alert
 1. Break the child pipeline on purpose (for example a wrong table name)
